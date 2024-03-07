@@ -31,7 +31,7 @@ $(document).ready(function () {
     // using the tickers variable declared above, we go through each one saved to local storage and add it to our grid
     // in an HTML element
     tickers.forEach(function(ticker) {
-        addTickerToGrid();
+        addTickerToGrid(ticker);
     });
 
     // update prices when we load the page
@@ -75,7 +75,7 @@ $(document).ready(function () {
 
 function addTickerToGrid(ticker) {
     // append the new ticker to the current ticker grid element
-    $('#ticker-grid').append(`<div id="${ticker}" class="stock-box">
+    $('#tickers-grid').append(`<div id="${ticker}" class="stock-box">
         <h2>${ticker}</h2>
         <p id="${ticker}-price"></p>
         <p id="${ticker}-pct"></p>
