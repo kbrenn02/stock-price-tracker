@@ -6,7 +6,7 @@
         <!-- link the stylesheet. I think it also would have worked with something like href="./static/style.css" -->
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
         <!-- link the jquery script. By having the source be the website, saves space from having to download it to the local device -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <!-- link to javascript that we write. Similar path to the stylesheet above -->
         <script src="{{ url_for('static', filename='script.js')}}"></script>
     </head>
