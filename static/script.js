@@ -50,7 +50,34 @@ $(document).ready(function () {
             tickers.push(newTicker);
             // and update local storage to include the updated list of tickers
             localStorage.setItem('tickers', JSON.stringify(tickers))
+            // add the new ticker to the current grid
+            addTickerToGrid(newTicker)
         }
-    }) 
+        // after we've grabbed the value that was submitted, we clear the input field (so people can add more tickers)
+        $('new-ticker').val('');
+        updatePrices();
+    });
 
-})
+    // Each stock in the grid (id='tickers-grid' hence why the $ variable starts with a #) will have a remove button with the class
+    // remove-btn (class='remove-btn' hence why the $ variable starts with a '.')
+    $('#tickers-grid').on('click', '.remove-btn', function() {
+        // if the button is clicked, then we save the ticker code
+        var tickerToRemove = $(this).data('ticker');
+        // filter out the removed ticker
+        tickers = tickers.filter(t => t !== tickerToRemove)
+        localStorage.setItem('tickers', JSON.stringify(tickers))
+        // remove the item from the page
+        $(`#${tickerToRemove}`).remove();
+    })
+
+    startUpdateCycle();
+});
+
+function addTickerToGrid(ticker) {
+    $('#ticker-grid').append(`<div id="${ticker}" class="stock-box">
+        <h2>${ticker}</h2>
+        <p id="${ticker}-price"></p>
+        <p id="${ticker}-pct"></p>
+        <button class="remove-btn" data-ticker="${ticker}">Remove</button>
+        </div>`)
+}
