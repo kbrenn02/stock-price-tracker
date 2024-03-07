@@ -15,7 +15,7 @@ function startUpdateCycle() {
     // setInterval function. Counter-- reduces counter var above by 1. Using $('#counter), we are connecting to the
     // element with the id 'counter' in the index.html file and setting it to the counter variable we declare here.
     // This works similar to useState in React
-    var countdown = setInterval(function () {
+    setInterval(function () {
         counter--;
         $('#counter').text(counter);
         if (counter <= 0 ) {
@@ -74,10 +74,66 @@ $(document).ready(function () {
 });
 
 function addTickerToGrid(ticker) {
+    // append the new ticker to the current ticker grid element
     $('#ticker-grid').append(`<div id="${ticker}" class="stock-box">
         <h2>${ticker}</h2>
         <p id="${ticker}-price"></p>
         <p id="${ticker}-pct"></p>
         <button class="remove-btn" data-ticker="${ticker}">Remove</button>
         </div>`)
+}
+
+function updatePrices() {
+
+    tickers.forEach(function(ticker) {
+        // send a post request to our backend (our Flask application) of the ticker name
+        $.ajax({
+            url: '/get_stock_data',
+            type: 'POST',
+            data: JSON.stringify({'ticker': ticker}),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            // if the post is successful (the ticker was valid), the following is performed
+            success: function(data) {
+                var changePercent = ((data.currentPrice - data.openPrice) / data.openPrice) * 100;
+                // this is used to change the color of the text at various % changes
+                var colorClass;
+                if (changePercent <= -2) {
+                    colorClass = 'dark-red'
+                } else if (changePercent < 0) {
+                    colorClass = 'red'
+                } else if (changePercent == 0) {
+                    colorClass = 'gray'
+                } else if (changePercent <= 2) {
+                    colorClass = 'green'
+                } else {
+                    colorClass = 'dark-green'
+                }
+
+                // show the actual ticker price and change percent, both to 2 decimal places
+                $(`#${ticker}-price`).text(`$${data.currentPrice.toFixed(2)}`);
+                $(`#${ticker}-pct`).text(`$${changePercent.toFixed(2)}%`);
+                $(`#${ticker}-price`).removeClass('dark-red red gray green dark-green').addClass(colorClass);
+                $(`#${ticker}-pct`).removeClass('dark-red red gray green dark-green').addClass(colorClass);
+
+                // have the card flash a certain color depending on how the current price on the card (lastPrice) is different than the
+                // current price from the API (currentPrice)
+                var flashClass;
+                if (lastPrices[ticker] > data.currentPrice) {
+                    flashClass = 'red-flash';
+                } else if (lastPrices[ticker] < data.currentPrice) {
+                    flashClass = 'green-flash';
+                } else {
+                    flashClass = 'gray-flash'
+                }
+                lastPrices[ticker] = data.currentPrice;
+
+                $(`#${ticker}`).addClass(flashClass)
+                setTimeout(function() {
+                    $(`#${ticker}`).removeClass(flashClass)
+                }, 1000);
+            }
+        });
+    });
+
 }
