@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Stock Price Tracker</title>
+        <!-- link the stylesheet. I think it also would have worked with something like href="./static/style.css" -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+        <!-- link the jquery script. By having the source be the website, saves space from having to download it to the local device -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- link to javascript that we write. Similar path to the stylesheet above -->
+        <script src="{{ url_for('static', filename='script.js')}}"></script>
+    </head>
+    <!-- This is all the information we are building with html. The rest will be done in JS -->
+    <body>
+        <form id="add-ticker-form">
+            <input type="text" id="new-ticker" placeholder="Add Ticker" required>
+            <button type="submit">Add</button>
+        </form>
+        <p id="timer">Next update in <span id="counter"></span> seconds.</p>
+        <div id="tickers-grid"></div>
+    </body>
+</html>
