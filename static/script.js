@@ -33,12 +33,13 @@ $(document).ready(function () {
     tickers.forEach(function(ticker) {
         addTickerToGrid(ticker);
     });
+    console.log(tickers)
 
     // update prices when we load the page
     updatePrices();
 
     // we didn't declare actions in HTML for how to handle form submission, so we are doing it here, hence the $(add-ticker-form) call
-    $('add-ticker-form').submit(function(e) {
+    $('#add-ticker-form').submit(function(e) {
         // prevent default functionality from happening
         e.preventDefault();
         // this function says that when an event happens (inputting a stock ticker), we are pulling the information from the element
@@ -54,7 +55,7 @@ $(document).ready(function () {
             addTickerToGrid(newTicker)
         }
         // after we've grabbed the value that was submitted, we clear the input field (so people can add more tickers)
-        $('new-ticker').val('');
+        $('#new-ticker').val('');
         updatePrices();
     });
 
