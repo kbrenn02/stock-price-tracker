@@ -1,3 +1,14 @@
+/* Need to do an overhaul of the CSS. 
+1. The font of the price/percent change is too hard to read, so I will either 
+need to change the background color or the font color.
+2. I want the boxes to be rounded
+3. Maybe have the flash go a little faster. Maybe also have the refresh go a little faster
+4. Center and beautify the input field where one adds the stock ticker
+5. Make an error when an invalid stock ticker is input?
+    a. tested this and if I just do random letters, it still creates a blank box, so def fix this
+6. Create a graph feature where you can click into each box and it shows the stock graph of the past week
+ */
+
 #tickers-grid {
     display: flex;
     flex-wrap: wrap;
