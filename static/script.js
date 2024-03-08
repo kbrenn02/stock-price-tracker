@@ -100,8 +100,8 @@ function updatePrices() {
             error: function(xhr, status, error) {
                 // This is where you'd handle an invalid ticker response if the server sends back a non-200 status code.
                 // Filter out the invalid ticker from your tickers array
+                // This uses the same functionality as the "remove button" defined above
                 tickers = tickers.filter(t => t !== ticker);
-                console.log(tickers);
                 localStorage.setItem('tickers', JSON.stringify(tickers));
                 // Remove the ticker element from the page
                 $(`#${ticker}`).remove();
@@ -116,44 +116,44 @@ function updatePrices() {
                     return;
                 }
                 var changePercent = ((data.currentPrice - data.openPrice) / data.openPrice) * 100;
+                
                 // this is used to change the color of the text at various % changes
-                var colorClass;
-                if (changePercent <= -2) {
-                    colorClass = 'dark-red'
-                } else if (changePercent < 0) {
-                    colorClass = 'red'
-                } else if (changePercent == 0) {
-                    colorClass = 'gray'
-                } else if (changePercent <= 2) {
-                    colorClass = 'green'
-                } else {
-                    colorClass = 'dark-green'
-                }
+                var colorClass = getColorClass(changePercent);
 
                 // show the actual ticker price and change percent, both to 2 decimal places
-                $(`#${ticker}-price`).text(`$${data.currentPrice.toFixed(2)}`);
-                $(`#${ticker}-pct`).text(`${changePercent.toFixed(2)}%`);
-                $(`#${ticker}-price`).removeClass('dark-red red gray green dark-green').addClass(colorClass);
-                $(`#${ticker}-pct`).removeClass('dark-red red gray green dark-green').addClass(colorClass);
+                updatePriceAndPercentage(ticker, data.currentPrice, changePercent, colorClass);
 
                 // have the card flash a certain color depending on how the current price on the card (lastPrice) is different than the
                 // current price from the API (currentPrice)
-                var flashClass;
-                if (lastPrices[ticker] > data.currentPrice) {
-                    flashClass = 'red-flash';
-                } else if (lastPrices[ticker] < data.currentPrice) {
-                    flashClass = 'green-flash';
-                } else {
-                    flashClass = 'gray-flash'
-                }
-                lastPrices[ticker] = data.currentPrice;
-
-                $(`#${ticker}`).addClass(flashClass)
-                setTimeout(function() {
-                    $(`#${ticker}`).removeClass(flashClass)
-                }, 1000);
+                handlePriceChangeAnimation(ticker, data.currentPrice);
             }
         });
     });
+}
 
+// These 3 functions used to exist (not as functions) in the success handling section above. Pulled them out to make the
+// code cleaner to read
+
+function getColorClass(changePercent) {
+    if (changePercent <= -2) return 'dark-red';
+    else if (changePercent < 0) return 'red';
+    else if (changePercent == 0) return 'gray';
+    else if (changePercent <= 2) return 'green';
+    else return 'dark-green';
+}
+
+function updatePriceAndPercentage(ticker, currentPrice, changePercent, colorClass) {
+    $(`#${ticker}-price`).text(`$${currentPrice.toFixed(2)}`).removeClass('dark-red red gray green dark-green').addClass(colorClass);
+    $(`#${ticker}-pct`).text(`${changePercent.toFixed(2)}%`).removeClass('dark-red red gray green dark-green').addClass(colorClass);
+}
+
+function handlePriceChangeAnimation(){
+    var flashClass;
+    if (lastPrices[ticker] > data.currentPrice) flashClass = 'red-flash';
+    else if (lastPrices[ticker] < data.currentPrice) flashClass = 'green-flash';
+    else flashClass = 'gray-flash';
+
+    lastPrices[ticker] = data.currentPrice;
+    $(`#${ticker}`).addClass(flashClass);
+    setTimeout(function() {$(`#${ticker}`).removeClass(flashClass)}, 1000);
 }
