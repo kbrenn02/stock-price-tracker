@@ -8,6 +8,7 @@ app = Flask(__name__, template_folder='templates')
 # This is used as the root of the page, and it renders the html file
 @app.route('/')
 def index():
+    # render_template is a reference to the "templates" folder that the index.html file is stored in
     return render_template('index.html')
 
 # This is the actual function that works to get the ticker and historical data

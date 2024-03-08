@@ -3,7 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <title>Stock Price Tracker</title>
-        <!-- link the stylesheet. I think it also would have worked with something like href="./static/style.css" -->
+        <!-- link the stylesheet. I think it also would have worked with something like href="./static/style.css" 
+        So we actually can't do the above because we are using the Flask framework, which puts things in the static/templates
+        folder, so it needs to be written how it is -->
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
         <!-- link the jquery script. By having the source be the website, saves space from having to download it to the local device -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

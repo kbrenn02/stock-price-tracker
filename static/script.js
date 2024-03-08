@@ -6,7 +6,7 @@ var tickers = JSON.parse(localStorage.getItem('tickers')) || [];
 // variable to hold last prices. Has to be initialized to zero because we haven't stored any prices yet.
 var lastPrices = {};
 // set the countdown seconds
-var counter = 15;
+var counter = 10;
 
 
 function startUpdateCycle() {
@@ -20,7 +20,7 @@ function startUpdateCycle() {
         $('#counter').text(counter);
         if (counter <= 0 ) {
             updatePrices();
-            counter = 15;
+            counter = 10;
         }
     // because this calls the setInterval setting, we need to end the function call with the time this is rerun, in milliseconds
     }, 1000)
@@ -76,6 +76,9 @@ $(document).ready(function () {
 
 function addTickerToGrid(ticker) {
     // append the new ticker to the current ticker grid element
+    // if (${ticker.info['regularMarketPrice']} == None) {
+
+    // }
     $('#tickers-grid').append(`<div id="${ticker}" class="stock-box">
         <h2>${ticker}</h2>
         <p id="${ticker}-price"></p>
@@ -134,7 +137,7 @@ function updatePrices() {
                     $(`#${ticker}`).removeClass(flashClass)
                 }, 1000);
             }
-        });
+        }); console.log(data)
     });
 
 }
