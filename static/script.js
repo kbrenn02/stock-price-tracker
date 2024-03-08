@@ -97,8 +97,24 @@ function updatePrices() {
             data: JSON.stringify({'ticker': ticker}),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
+            error: function(xhr, status, error) {
+                // This is where you'd handle an invalid ticker response if the server sends back a non-200 status code.
+                // Filter out the invalid ticker from your tickers array
+                tickers = tickers.filter(t => t !== ticker);
+                console.log(tickers);
+                localStorage.setItem('tickers', JSON.stringify(tickers));
+                // Remove the ticker element from the page
+                $(`#${ticker}`).remove();
+                // Optionally restart the update cycle if necessary
+                // startUpdateCycle(); // Be cautious with restarting update cycles to avoid excessive requests or infinite loops.
+                console.error('Error fetching data for ticker:', ticker, 'Status:', status, 'Error:', error);
+            },
             // if the post is successful (the ticker was valid), the following is performed
             success: function(data) {
+                if (!data.valid) {
+                    // if data is invalid, it will be handled by the error handling above
+                    return;
+                }
                 var changePercent = ((data.currentPrice - data.openPrice) / data.openPrice) * 100;
                 // this is used to change the color of the text at various % changes
                 var colorClass;
@@ -116,7 +132,7 @@ function updatePrices() {
 
                 // show the actual ticker price and change percent, both to 2 decimal places
                 $(`#${ticker}-price`).text(`$${data.currentPrice.toFixed(2)}`);
-                $(`#${ticker}-pct`).text(`$${changePercent.toFixed(2)}%`);
+                $(`#${ticker}-pct`).text(`${changePercent.toFixed(2)}%`);
                 $(`#${ticker}-price`).removeClass('dark-red red gray green dark-green').addClass(colorClass);
                 $(`#${ticker}-pct`).removeClass('dark-red red gray green dark-green').addClass(colorClass);
 
@@ -137,7 +153,7 @@ function updatePrices() {
                     $(`#${ticker}`).removeClass(flashClass)
                 }, 1000);
             }
-        }); console.log(data)
+        });
     });
 
 }
