@@ -28,6 +28,12 @@ function startUpdateCycle() {
 
 // When you load the page, do the following - that's what $(document).ready does
 $(document).ready(function () {
+
+    // close the popup if it's visible
+    $(".close-button").click(function() {
+        $("#errorPopup").hide();
+    });
+
     // using the tickers variable declared above, we go through each one saved to local storage and add it to our grid
     // in an HTML element
     tickers.forEach(function(ticker) {
@@ -97,16 +103,22 @@ function updatePrices() {
             data: JSON.stringify({'ticker': ticker}),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
-            error: function(xhr, status, error) {
-                // This is where you'd handle an invalid ticker response if the server sends back a non-200 status code.
-                // Filter out the invalid ticker from your tickers array
-                // This uses the same functionality as the "remove button" defined above
+            error: function(status, error) {
+                // This is where I handle an invalid ticker response if the server sends back a non-200 status code.
+                
+                // thie is the error message that will be shown when an invalid ticker is added
+                var errorMessage = `${ticker} is not a valid ticker symbol. Please try again.`
+                // Show the popup
+                $("#errorPopup").show();
+                // display an errorMessage defined above
+                $("#errorMessage").text(errorMessage);
+
+                // Filter out the invalid ticker from the tickers array. This uses the same functionality as the "remove button" defined above
                 tickers = tickers.filter(t => t !== ticker);
                 localStorage.setItem('tickers', JSON.stringify(tickers));
                 // Remove the ticker element from the page
                 $(`#${ticker}`).remove();
-                // Optionally restart the update cycle if necessary
-                // startUpdateCycle(); // Be cautious with restarting update cycles to avoid excessive requests or infinite loops.
+                // print the error to the console
                 console.error('Error fetching data for ticker:', ticker, 'Status:', status, 'Error:', error);
             },
             // if the post is successful (the ticker was valid), the following is performed
@@ -147,13 +159,14 @@ function updatePriceAndPercentage(ticker, currentPrice, changePercent, colorClas
     $(`#${ticker}-pct`).text(`${changePercent.toFixed(2)}%`).removeClass('dark-red red gray green dark-green').addClass(colorClass);
 }
 
-function handlePriceChangeAnimation(){
+function handlePriceChangeAnimation(ticker, currentPrice){
     var flashClass;
-    if (lastPrices[ticker] > data.currentPrice) flashClass = 'red-flash';
-    else if (lastPrices[ticker] < data.currentPrice) flashClass = 'green-flash';
+    if (lastPrices[ticker] > currentPrice) flashClass = 'red-flash';
+    else if (lastPrices[ticker] < currentPrice) flashClass = 'green-flash';
     else flashClass = 'gray-flash';
 
-    lastPrices[ticker] = data.currentPrice;
+    lastPrices[ticker] = currentPrice;
     $(`#${ticker}`).addClass(flashClass);
     setTimeout(function() {$(`#${ticker}`).removeClass(flashClass)}, 1000);
 }
+
