@@ -106,7 +106,7 @@ function updatePrices() {
             error: function(status, error) {
                 // This is where I handle an invalid ticker response if the server sends back a non-200 status code.
                 
-                // thie is the error message that will be shown when an invalid ticker is added
+                // this is the error message that will be shown when an invalid ticker is added
                 var errorMessage = `${ticker} is not a valid ticker symbol. Please try again.`
                 // Show the popup
                 $("#errorPopup").show();
@@ -169,4 +169,3 @@ function handlePriceChangeAnimation(ticker, currentPrice){
     $(`#${ticker}`).addClass(flashClass);
     setTimeout(function() {$(`#${ticker}`).removeClass(flashClass)}, 1000);
 }
-
