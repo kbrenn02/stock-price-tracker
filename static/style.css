@@ -1,4 +1,5 @@
 /* Need to do an overhaul of the CSS. 
+Tasks:
 1. The font of the price/percent change is too hard to read, so I will either 
 need to change the background color or the font color.
 2. I want the boxes to be rounded
@@ -7,6 +8,11 @@ need to change the background color or the font color.
 5. Make an error when an invalid stock ticker is input?
     a. tested this and if I just do random letters, it still creates a blank box, so def fix this
 6. Create a graph feature where you can click into each box and it shows the stock graph of the past week
+
+Completed
+5
+2
+1
  */
 
 #tickers-grid {
@@ -18,19 +24,20 @@ need to change the background color or the font color.
     width: 200px;
     height: 200px;
     border: 1px solid #333;
+    border-radius: 25px;
     margin: 10px;
     padding: 10px;
     transition: background-color 0.5s;
-    background: #eee;
+    background: rgb(249, 246, 238);
 }
 
 /* ColorClass section in the JS file */
 .dark-red {
-    color: #FF0000;
+    color: #7b0303;
 }
 
 .red {
-    color: #FFCCCC;
+    color: #FF0000;
 }
 
 .gray {
@@ -38,27 +45,27 @@ need to change the background color or the font color.
 }
 
 .green {
-    color: #CCFFCC;
+    color: #00b300;
 }
 
 .dark-green {
-    color: #008000;
+    color: #076a07;
 }
 
 /* flashClass */
 .red-flash {
-    transition: background-color 1s;
+    transition: background-color 0.5s;
     background-color: #ffcccc !important;
 }
 
 .green-flash {
-    transition: background-color 1s;
+    transition: background-color 0.5s;
     background-color: #ccffcc !important;
 }
 
 .gray-flash {
-    transition: background-color 1s;
-    background-color: #ccc !important;
+    transition: background-color 0.5s;
+    background-color: rgb(250, 249, 246) !important;
 }
 
 
